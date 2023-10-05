@@ -301,6 +301,10 @@ button {
   cursor: pointer;
 }
 
+#username{
+  min-width: 400px;
+  max-height: 9px;
+}
 button:hover {
   background-color: #0056b3;
 }
@@ -320,4 +324,8 @@ button:hover {
 .button-group {
   display: flex;
   gap: 10px; /* Add spacing between buttons */
+}
+#btn{
+  position: relative;
+  left: 130px;
 }

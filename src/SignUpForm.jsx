@@ -127,7 +127,7 @@ function Signup() {
                   </label>
                 </div>
               </div>
-              <button type="submit" className="register-btn">
+              <button type="submit" className="register-btn" id='btn'>
                 Register
               </button>
             </form>
