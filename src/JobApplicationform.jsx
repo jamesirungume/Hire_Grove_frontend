@@ -27,7 +27,7 @@ function JobApplicationForm() {
     };
 
     // Post the job application data to the backend API.
-    const response = await fetch('http://localhost:5000/job-applications', {
+    const response = await fetch('https://hire-backend.onrender.com/job-applications', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

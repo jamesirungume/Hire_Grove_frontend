@@ -29,7 +29,7 @@ function AddJob() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/Availablejobs', {
+      const response = await fetch('https://hire-backend.onrender.com/Availablejobs', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

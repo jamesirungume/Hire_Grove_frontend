@@ -14,7 +14,7 @@ function AppliedJobs() {
   }, []);
 
   const handleRemoveSubmission = (jobId) => {
-    fetch(`http://127.0.0.1:5000/job-application/${jobId}`, {
+    fetch(`https://hire-backend.onrender.com/job-application/${jobId}`, {
       method: 'DELETE',
     })
       .then((response) => {

@@ -14,7 +14,7 @@ function JobListings() {
     const accessToken = localStorage.getItem('loginToken'); // Change 'access_token' to 'loginToken' if that's what you're using in local storage
 
     // Fetch the job listings from the backend API with authentication
-    fetch("http://127.0.0.1:5000/Availablejobs", {
+    fetch("https://hire-backend.onrender.com/Availablejobs", {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json', // Add this line to specify JSON content type
