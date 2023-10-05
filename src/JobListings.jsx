@@ -1,48 +1,46 @@
-import React, { useState ,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import JobListing from './JobListing';
 import { Link } from 'react-router-dom';
 
-
 function JobListings() {
-  const [searchTerm, setSearchTerm] = useState(""); // State to hold the user's input
-  const [locationFilter, setLocationFilter] = useState(""); // State to hold the location filter
-    // fetching the jobs from the backend api
-    const [jobListings, setJobListings] = useState([]); 
+  const [searchTerm, setSearchTerm] = useState("");
+  const [locationFilter, setLocationFilter] = useState("");
+  const [jobListings, setJobListings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
+  useEffect(() => {
+    // Retrieve the access token from local storage
+    const accessToken = localStorage.getItem('loginToken'); // Change 'access_token' to 'loginToken' if that's what you're using in local storage
 
-      const [loading, setLoading] = useState(true);
-      const [error, setError] = useState(null);
-
-      useEffect(() => {
-        // Fetch the job listings from the backend API
-        fetch("http://127.0.0.1:5555/Availablejobs")
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error("Network response was not ok");
-            }
-            return response.json();
-          })
-          .then((jobListings) => {
-            console.log("Fetched job listings:", jobListings); 
-            setJobListings(jobListings);
-            setLoading(false); // Mark loading as complete
-          })
-          .catch((error) => {
-            console.error("Error fetching job listings:", error); 
-            setError(error); // Set the error state
-            setLoading(false); // Mark loading as complete
-          });
-      }, []);
-
-      // Filtering the jobs based on the search term
-      const filteredJobs = jobListings.filter((job) => {
-        const jobTitle = job.title || "";
-        return jobTitle.toLowerCase().includes(searchTerm.toLowerCase());
+    // Fetch the job listings from the backend API with authentication
+    fetch("http://127.0.0.1:5000/Availablejobs", {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json', // Add this line to specify JSON content type
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((jobListings) => {
+        console.log("Fetched job listings:", jobListings);
+        setJobListings(jobListings);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching job listings:", error);
+        setError(error);
+        setLoading(false);
       });
-    
-      return (
-        <>
-    <div className="jobsearch-nav-container">
+  }, []);
+
+  return (
+    <>
+      <div className="jobsearch-nav-container">
         <form action="" className="jobsearch-form">
           <input
             placeholder="job title"
@@ -59,30 +57,26 @@ function JobListings() {
         </div>
       </div>
 
-          <div className="job-listings">
-            <p>Available Jobs</p>
-            {/* Conditional rendering to display the jobs */}
-            {
-              jobListings !== '' && jobListings.length > 0 ? (
-                searchTerm !== ''
-                  ? filteredJobs.map((job, index) => (
-                      <JobListing key={index} job={job} />
-                    ))
-                  : (
-                    <ul>
-                      {jobListings.map((job, index) => (
-                        <JobListing key={index} job={job} />
-                      ))}
-                    </ul>
-                  )
-              ) : (
-                <p>Loading job listings...</p>
-              )
-            }
+      <div className="job-listings">
+        {/* Conditional rendering to display the jobs */}
+        {jobListings !== '' && jobListings.length > 0 ? (
+          searchTerm !== ''
+            ? filteredJobs.map((job, index) => (
+                <JobListing key={index} job={job} />
+              ))
+            : (
+              <ul>
+                {jobListings.map((job, index) => (
+                  <JobListing key={index} job={job} />
+                ))}
+              </ul>
+            )
+        ) : (
+          <p>Loading job listings...</p>
+        )}
+      </div>
+    </>
+  );
+}
 
-          </div>
-        </>
-      );
-    }
-    
-    export default JobListings;
+export default JobListings;

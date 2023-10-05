@@ -27,7 +27,7 @@ function Signup() {
     };
 
     try {
-      const response = await fetch("http://localhost:5555/register", {
+      const response = await fetch("http://localhost:5000/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -37,7 +37,7 @@ function Signup() {
 
       if (response.status === 201) {
         const data = await response.json();
-        localStorage.setItem('access_token', data.access_token);
+        localStorage.setItem('access_token', data.access_token); // Store the access token in local storage
         setRegistrationStatus('success'); // Registration successful
 
         // Show the success message for a few seconds before redirecting
@@ -87,9 +87,9 @@ function Signup() {
                   required
                 />
               </div>
-              <div className="mb-4">
+              <div className="mb-4" >
                 <label htmlFor="email" className="form-label">Your Email</label>
-                <input
+                <input 
                   type="email"
                   name="email"
                   value={formData.email}

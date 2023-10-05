@@ -14,7 +14,7 @@ function App() {
   return (
     <>
     <BrowserRouter>
-        <Routes>
+        <Routes classname="Background">
             <Route exact path='/' element={<LandingPage/>}/>
             <Route exact path='/jobs' element={<JobListings/>}/>
             <Route path="/jobs/appliedjobs" element={<AppliedJobs />} />
