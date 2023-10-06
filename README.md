@@ -1,4 +1,4 @@
-Job Application Backend
+
 Table of Contents
 
     Introduction
