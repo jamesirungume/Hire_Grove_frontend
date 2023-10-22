@@ -34,17 +34,18 @@ function Signup() {
         },
         body: JSON.stringify(userData),
       });
-      navigate("/jobs");
+      setTimeout(() => {
+        setRegistrationStatus(null); // Clear the message
+        navigate("/jobs"); // Redirect after a delay
+      }, 3000); // Delay for 3 seconds (adjust as needed)
+      setRegistrationStatus('success'); // Registration successful
       if (response.status === 201) {
         const data = await response.json();
         localStorage.setItem('access_token', data.access_token); // Store the access token in local storage
-        setRegistrationStatus('success'); // Registration successful
+        
 
         // Show the success message for a few seconds before redirecting
-        setTimeout(() => {
-          setRegistrationStatus(null); // Clear the message
-          navigate("/jobs"); // Redirect after a delay
-        }, 3000); // Delay for 3 seconds (adjust as needed)
+        
       } else {
         const errorData = await response.json();
         console.error("Registration failed:", errorData.message);
