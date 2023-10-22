@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-
 function AppliedJobs() {
   const [jobListings, setJobListings] = useState([]);
   const [newResumeUrl, setNewResumeUrl] = useState('');
 
   useEffect(() => {
     // Fetch the job listings from the backend API
-    fetch("http://127.0.0.1:5000/job-applications")
+    fetch("https://hire-backend.onrender.com/job-applications")
       .then((response) => response.json())
       .then((jobListings) => setJobListings(jobListings));
   }, []);
@@ -34,7 +33,7 @@ function AppliedJobs() {
   };
 
   const handleSaveResumeUrl = (jobId) => {
-    fetch(`http://127.0.0.1:5000/job-application/${jobId}`, {
+    fetch(`https://hire-backend.onrender.com/job-application/${jobId}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -61,15 +60,14 @@ function AppliedJobs() {
         </div>
       </div>
       <div className="job-listings">
-        <p>.</p>
         <ul>
           {jobListings.map((job, index) => (
             <li className="job-listing" key={job.id}>
               <h3>{job.title}</h3>
               <div className="job-listing-footer">
-                <p>Company: {job.company_name}</p>
-                <p>resume_url: {job.resume_url}</p>
-                <p id="username">Employee name: {job.username}</p>
+                {job.company_name && <p>Company: {job.company_name}</p>}
+                {job.resume_url && <p>resume_url: {job.resume_url}</p>}
+                {job.username && <p id="username">Employee name: {job.username}</p>}
                 <div className="button-container">
                   <input
                     className="resume-url-input"
