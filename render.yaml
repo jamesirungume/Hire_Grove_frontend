@@ -1,0 +1,5 @@
+web:
+  - name: Hire-Groove
+    buildCommand: npm run build
+    useDocker: false
+    staticPublishPath: dist
