@@ -34,7 +34,7 @@ function Signup() {
         },
         body: JSON.stringify(userData),
       });
-
+      navigate("/jobs");
       if (response.status === 201) {
         const data = await response.json();
         localStorage.setItem('access_token', data.access_token); // Store the access token in local storage
