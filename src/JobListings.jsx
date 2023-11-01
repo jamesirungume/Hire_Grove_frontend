@@ -1,65 +1,85 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import JobListing from './JobListing';
+import { Link } from 'react-router-dom';
 
-const JobListings = () => {
+function JobListings() {
+  const [searchTerm, setSearchTerm] = useState('');
   const [jobListings, setJobListings] = useState([]);
+  const [filteredJobs, setFilteredJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const fetchJobListings = async () => {
+      try {
+        const accessToken = localStorage.getItem('accessToken');
 
-    if (token) {
-      const headers = {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-        // Add any other necessary headers here
-      };
+        const response = await fetch("https://hire-backend.onrender.com/Availablejobs", {
+          headers: {
+            Authorization: `Bearer ${accessToken}` // Set the access token in the Authorization header
+          }
+        });
 
-      axios.get('https://your-api-endpoint.com/your-endpoint', {
-        headers: headers
-      })
-      .then(response => {
-        console.log('Response:', response.data);
-        setJobListings(response.data); // Assuming the response contains job listings
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const jobListingsData = await response.json();
+        setJobListings(jobListingsData);
         setLoading(false);
-      })
-      .catch(error => {
-        console.error('Error:', error);
+      } catch (error) {
+        console.error("Error fetching job listings:", error);
         setError(error);
         setLoading(false);
-      });
-    } else {
-      console.log('Token not found in local storage');
-      setLoading(false);
-      // Handle if token is not available
-    }
+      }
+    };
+
+    fetchJobListings();
   }, []);
+
+  useEffect(() => {
+    // Filter job listings based on the search term
+    const filteredResults = jobListings.filter(job =>
+      job.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    setFilteredJobs(filteredResults);
+  }, [searchTerm, jobListings]);
 
   return (
     <>
-      {loading ? (
-        <p>Loading job listings...</p>
-      ) : error ? (
-        <p>Error fetching job listings. Please try again.</p>
-      ) : (
-        <div>
-          <h1>Job Listings</h1>
+      <div className="jobsearch-nav-container">
+        <form action="" className="jobsearch-form">
+          <input
+            placeholder="Search job title"
+            className="search-jobs"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </form>
+        <div className="job-nav-links">
+          <Link to="/jobs/appliedjobs">Applied Jobs</Link>
+          <Link to="/addjob" className="create-job-alert">
+            Create Job Alert
+          </Link>
+        </div>
+      </div>
+
+      <div className="job-listings">
+        {loading ? (
+          <p>Loading job listings...</p>
+        ) : filteredJobs.length > 0 ? (
           <ul>
-            {jobListings.map((job, index) => (
-              <li key={index}>
-                {/* Display job details as needed */}
-                <div>
-                  <strong>{job.title}</strong>
-                  <p>{job.description}</p>
-                </div>
-              </li>
+            {filteredJobs.map((job, index) => (
+              <JobListing key={index} job={job} />
             ))}
           </ul>
-        </div>
-      )}
+        ) : (
+          <p>No jobs found matching the search term.</p>
+        )}
+      </div>
     </>
   );
-};
+}
 
 export default JobListings;

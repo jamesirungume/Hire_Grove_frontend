@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import './signup.css';
@@ -9,53 +10,58 @@ function Signup() {
     password: '',
   });
 
-  const [registrationStatus, setRegistrationStatus] = useState(null); // Added registration status state
+  const [registrationStatus, setRegistrationStatus] = useState(null);
+ 
 
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+  // ... (your previous code)
 
-  const handleSubmit = async (e) => {
-    e.preventDefault(); 
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    const userData = {
-      username: formData.username,
-      email: formData.email,
-      password: formData.password,
-    };
-
-    try {
-      const response = await fetch("https://hire-backend.onrender.com/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
-      setTimeout(() => {
-        setRegistrationStatus(null); // Clear the message
-        navigate("/jobs"); // Redirect after a delay
-      }, 3000); // Delay for 3 seconds (adjust as needed)
-      setRegistrationStatus('success'); // Registration successful
-      if (response.status === 201) {
-        const data = await response.json();
-        localStorage.setItem('access_token', data.access_token); // Store the access token in local storage
-        
-
-        // Show the success message for a few seconds before redirecting
-        
-      } else {
-        const errorData = await response.json();
-        console.error("Registration failed:", errorData.message);
-        setRegistrationStatus('error'); // Registration failed
-      }
-    } catch (error) {
-      console.error("Registration failed:", error);
-      setRegistrationStatus('error'); // Registration failed
-    }
+  const userData = {
+    username: formData.username,
+    email: formData.email,
+    password: formData.password,
   };
+
+  try {
+    const response = await fetch("https://hire-backend.onrender.com/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    });
+
+    if (response.status === 201) {
+      const data = await response.json();
+
+      // Save access token in localStorage
+      localStorage.setItem('accessToken', data.access_token);
+      console.log('Access Token:', data.access_token);
+
+      setRegistrationStatus('success');
+
+      setTimeout(() => {
+        setRegistrationStatus(null);
+        navigate("/jobs");
+      }, 3000);
+    } else {
+      const errorData = await response.json();
+      console.error("Registration failed:", errorData.message);
+      setRegistrationStatus('error');
+    }
+  } catch (error) {
+    console.error("Registration failed:", error);
+    setRegistrationStatus('error');
+  }
+};
+
 
   return (
     <div className="signup-container">
@@ -140,3 +146,4 @@ function Signup() {
 }
 
 export default Signup;
+
