@@ -79,7 +79,7 @@ const handleSubmit = async (e) => {
             )}
             {registrationStatus === 'error' && (
               <div className="alert alert-danger" role="alert">
-                Registration failed. Please check your information and try again.
+                Username or email is already used. Kindly change the username and try again.
               </div>
             )}
             <form onSubmit={handleSubmit}>
