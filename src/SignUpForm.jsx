@@ -1,6 +1,7 @@
 
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
+import Swal from "sweetalert2";
 import './signup.css';
 
 function Signup() {
@@ -28,7 +29,7 @@ const handleSubmit = async (e) => {
     email: formData.email,
     password: formData.password,
   };
-
+  Swal.showLoading();
   try {
     const response = await fetch("https://hire-backend.onrender.com/register", {
       method: "POST",
@@ -37,6 +38,7 @@ const handleSubmit = async (e) => {
       },
       body: JSON.stringify(userData),
     });
+    Swal.hideLoading();
 
     if (response.status === 201) {
       const data = await response.json();
